@@ -1,4 +1,4 @@
-= Initial setup of SD card for Life Display
+# Initial setup of SD card for Life Display
 
 Download Pi OS lite version from
 https://www.raspberrypi.com/software/operating-systems/
@@ -37,7 +37,7 @@ ansible-playbook -v -k ./setup.yml
 the SSH password will be the password you created for the 'life' user. Or the default of
 asdasdasd
 
-= Build sdl2-life
+# Build sdl2-life
 
 It is easiest to just build the sdl2-life program on the Pi. The git repo has been checked
 out into /opt/sdl2-life/ and it should simply be a matter of running:
@@ -46,7 +46,7 @@ out into /opt/sdl2-life/ and it should simply be a matter of running:
 
 to build it.
 
-= Final Steps
+# Final Steps
 
 At this point the system should be ready. You can run /home/life/run-life-server to test, and
 then reboot to make sure it starts on its own.
