@@ -1,0 +1,10 @@
+[Unit]
+Description=tmux sdl2life session
+After=multi-user.target network.target
+
+[Service]
+Type=forking
+User=life
+PAMName=login
+WorkingDirectory=/home/life/
+ExecStart=/usr/bin/tmux -u -f /home/life/.tmux.conf start

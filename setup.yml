@@ -1,0 +1,87 @@
+---
+- hosts: lifedisplay
+  become_user: root
+  become: true
+  tasks:
+    - name: Make sure needed applications are installed
+      apt:
+        name:
+          - python3
+          - tmux
+          - watchdog
+          - golang
+          - libsdl2-2.0-0
+          - libsdl2-dev
+          - libsdl2-ttf-2.0-0
+          - libsdl2-ttf-dev
+          - git
+        state: latest
+        update_cache: true
+
+    - name: Install the watchdog config
+      copy:
+        src: "./configs/{{ item }}"
+        dest: /etc/
+        owner: root
+        group: root
+        mode: 0644
+      with_items:
+        - watchdog.conf
+
+    - name: Start the watchdog service
+      service:
+        name: watchdog
+        state: started
+        enabled: true
+
+    - name: Install the systemd service files
+      copy:
+        src: "./configs/{{ item }}"
+        dest: /lib/systemd/system/
+        owner: root
+        group: root
+        mode: 0644
+      with_items:
+        - tmux.service
+        - tmux@.service
+
+    - name: Disable getty@tty1
+      systemd:
+        name: getty@tty1
+        state: stopped
+        enabled: false
+        daemon_reload: true
+
+    - name: Add multi-user.target.wants
+      file:
+        dest: /lib/systemd/system/multi-user.target.wants/
+        state: directory
+
+    - name: Add tmux@tty1.service to multi-user.target.wants
+      file:
+        src: /lib/systemd/system/tmux@.service
+        dest: /lib/systemd/system/multi-user.target.wants/tmux@tty1.service
+        state: link
+
+    - name: Copy over tmux.conf
+      copy:
+        src: ./configs/tmux.conf
+        dest: /home/life/.tmux.conf
+        owner: life
+        group: life
+
+    - name: Copy over run-life-server
+      copy:
+        src: ./configs/run-life-server
+        dest: /home/life/run-life-server
+        owner: life
+        group: life
+        mode: 0755
+
+    - name: Change ownership of /opt/sdl2-life
+      file:
+        dest: /opt/sdl2-life
+        owner: life
+        group: life
+        mode: u=rwX,g=rX,o=rX
+        recurse: true

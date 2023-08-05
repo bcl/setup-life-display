@@ -1,0 +1,14 @@
+#!/usr/bin/sh
+cd /opt/sdl2-life || exit 1
+
+VIDEO=/dev/dri/card0
+
+# Wait for video card to appear and have correct permission
+echo "Waiting for $VIDEO"
+while [ ! -e "$VIDEO" ] || [ ! -w "$VIDEO" ]; do
+    sleep 1
+    ls -l "$VIDEO"
+done
+
+echo "Starting sdl2-life"
+./sdl2-life -font /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf -height 480 -width 800 -fps 20 -color -colors "#ff0000,#00ff00,#ffff00,#ffffff" -gradient 2 -rotate 270 -server -host 0.0.0.0

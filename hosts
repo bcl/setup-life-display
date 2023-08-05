@@ -1,0 +1,5 @@
+[lifedisplay]
+192.168.101.189 ansible_ssh_user=life ansible_ssh_port=22
+
+[lifedisplay:vars]
+ansible_python_interpreter=/usr/bin/python3
